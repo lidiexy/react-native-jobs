@@ -1,9 +1,12 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { PersistGate } from 'redux-persist/es/integration/react';
 import { TabNavigator, StackNavigator, TabBarTop } from 'react-navigation';
 import { Provider } from 'react-redux';
 
-import store from './store';
+// import { persistor, store } from './store';
+import * as storeObject from './store';
+const { persistor, store } = storeObject.configureStore();
 
 // importing screens
 import AuthScreen from './screens/AuthScreen';
@@ -14,6 +17,7 @@ import ReviewScreen from './screens/ReviewScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 export default class App extends React.Component {
+
     render() {
         const MainNavigator = TabNavigator({
             welcome: { screen: WelcomeScreen },
@@ -31,22 +35,16 @@ export default class App extends React.Component {
                 }, {
                     initialRouteName: 'map',
                     tabBarPosition: 'bottom',
-                    swipeEnabled: true,
-                    tabBarComponent: TabBarTop,
+                    swipeEnabled: false,
+                    //tabBarComponent: TabBarTop,
                     tabBarOptions: {
-                        allowFontScaling: false,
+                        activeTintColor: '#ffffff',
+                        inactiveTintColor: '#ff8da0',
+                        allowFontScaling: true,
                         style: {
                             backgroundColor: '#de3366',
-                            padding: 8,
-                        },
-                        labelStyle: {
-                            color: 'white',
-                            fontSize: 12,
-                        },
-                        indicatorStyle: {
-                            borderTopColor: '#ffffff',
-                            borderTopWidth: 3,
-                        },
+                            padding: 3,
+                        }
                     }
                 })
             }
@@ -59,8 +57,14 @@ export default class App extends React.Component {
         });
 
         return (
-            <Provider store={store}>
-                <MainNavigator />
+            <Provider store={ store }>
+                <PersistGate
+                    loading={ null }
+                    onBeforeLift={() => { console.log('beforeLift')}}
+                    persistor={ persistor }
+                >
+                    <MainNavigator />
+                </PersistGate>
             </Provider>
         );
     }

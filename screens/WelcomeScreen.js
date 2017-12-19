@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AsynStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import _ from 'lodash';
 import { AppLoading } from 'expo';
 import Slides from '../components/Slides';
@@ -11,12 +11,13 @@ const SLIDES_DATA = [
 ];
 
 class WelcomeScreen extends Component {
-	state = { token: null }
+	state = { token: null };
 
 	async componentWillMount() {
-		let token = await AsynStorage.getItem('fb_token');
-		if(token) {
-			this.props.navigation.navigate('map');
+		let token = await AsyncStorage.getItem('fb_token');
+		if(token || true) {
+            this.setState({ token: true });
+            this.props.navigation.navigate('map');
 		} else {
             this.setState({ token: false });
         }
@@ -28,7 +29,7 @@ class WelcomeScreen extends Component {
 
 	render() {
 		if(_.isNull(this.state.token)) {
-			<AppLoading />;
+			return <AppLoading />;
 		}
 		return (
 			<Slides data={ SLIDES_DATA } onComplete={this.onSlidesComplete} />

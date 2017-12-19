@@ -7,6 +7,8 @@ class AuthScreen extends Component {
 	componentDidMount() {
 		this.props.facebookLogin();
         this.onAuthComplete(this.props);
+        // FIXME: Remove this line of code if we successful get log in with facebook and we need to keep testing the application.
+		// AsyncStorage.removeItem('fb_token');
     }
 
 	componentWillReceiveProps(nextProps) {
